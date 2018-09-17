@@ -102,7 +102,7 @@ int main(void)
 
     zmq_close(dealer);
     zmq_ctx_destroy(context);
-    return NULL;
+    return 0;
 }
 
 //  Send msg to server router socket
@@ -123,8 +123,7 @@ char* ReadMessage()
     size_t delSize = strlen(delimeter);
     printf("delSize: %zu\n", delSize);
     printf("delValue: %s\n", delimeter);
-    free(delimeter);     //  Envelope delimiter
-    free(delSize);
+    //free(delimeter);     //  Envelope delimiter
 
 	char *msg = s_recv(dealer);
     receivedCount++;
@@ -133,7 +132,7 @@ char* ReadMessage()
 }
 
 
-/*
+#if 0
 // install and include czmq
 
 	// Do I want to use the high level API or no?
@@ -158,4 +157,4 @@ char* ReadMessage()
 
     rc = zmsg_send(&msg, dealer); // is dealer right here?
     assert(rc == 0);
-*/
+#endif
