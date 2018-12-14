@@ -25,7 +25,8 @@ vpath %.c $(SRC_DIRS)
 CFLAGS = -g3 -O1 -ffunction-sections -fdata-sections
 WFLAGS = -Wall -Wpadded
 LFLAGS = -Wl,-Map=ncob_client.map,--cref -Wl,--gc-sections -Wl,--print-gc-sections
-LIBS   = -lzmq
+LIBS   = -lczmq
+#-lzmq
 
 #.PHONY: all
 #	all: $(PROJECT_NAME)

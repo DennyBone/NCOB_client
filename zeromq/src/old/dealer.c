@@ -21,7 +21,7 @@ int main(void)
 	// Socket to talk to server
 	context = zmq_ctx_new();
     dealer = zmq_socket(context, ZMQ_DEALER);
-    zmq_connect(dealer, "tcp://192.168.0.10:61615");
+    zmq_connect(dealer, "tcp://192.168.0.16:61615"); //"tcp://192.168.0.10:61615"
 
     int total = 0;
     while (1)
@@ -123,7 +123,7 @@ char* ReadMessage()
     size_t delSize = strlen(delimeter);
     printf("delSize: %zu\n", delSize);
     printf("delValue: %s\n", delimeter);
-    //free(delimeter);     //  Envelope delimiter
+    free(delimeter);     //  Envelope delimiter
 
 	char *msg = s_recv(dealer);
     receivedCount++;

@@ -2,17 +2,17 @@
  ============================================================================
  Name        : main.c
  Author      : Dennis Moore
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
  ============================================================================
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "registration.h"
 
 int main(void)
 {
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+	//register a new robot with the server
+	registerNewBot("NCOBot", "socket_0");
+
 	return EXIT_SUCCESS;
 }
