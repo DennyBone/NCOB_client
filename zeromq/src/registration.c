@@ -1,6 +1,6 @@
 /*
  ============================================================================
- Name        : main.c
+ Name        : registration.c
  Author      : Dennis Moore
  Description : Code for handling robot registration
  ============================================================================
@@ -8,42 +8,35 @@
 
 #include <czmq.h>
 #include <string.h>
+#include "registration.h"
+#include "messaging.h"
 
-void registerNewBot(char *botName, char *sockName)
+int8_t registerNewBot(const char *botName, const char *sockName)
 {
-	char serv_addr[] = "tcp://192.168.0.16:61617";
+	int8_t retVal = -1;
 
-	// CZMQ code to create a dealer socket and connect to server
-	zsock_t *dealer_sock = zsock_new_dealer(serv_addr);
-	assert(dealer_sock);
-
-	// create and send reg message with czmq
+	// create registration message
+	const char *msg[3] = {"Register", botName, sockName};
 	zmsg_t *reg_msg = zmsg_new();
-	assert(reg_msg);
-	zmsg_addstr(reg_msg, "Register");
-	zmsg_addstr(reg_msg, botName);
-	zmsg_addstr(reg_msg, sockName);
-	int8_t rc = zmsg_send(&reg_msg, dealer_sock); // frees and nullifies reg_msg
-	assert(rc == 0);
-	assert(reg_msg == NULL);
+	reg_msg = createMsg(msg, 3);
 
-	// wait for reply with blocking recv call(returns NULL if interrupted)
-	reg_msg = zmsg_recv(dealer_sock);
-	assert(reg_msg);
-	char *reg_str = zmsg_popstr(reg_msg);
+	// send registration message
+	sendMsg(reg_msg, dealer_sock);
+
+	// read server response
+	zmsg_t *returnMsg = zmsg_new();
+	returnMsg = readMsg(dealer_sock);
+	char *reg_str = zmsg_popstr(returnMsg);
 
 	// check if reg was successful; print out msg if so
 	if(strcmp(reg_str, "0") == 0)
     {
         puts("Registration was successful");
+        retVal = 0;
     }
-	else
-	{
-		//add code to retry or return gracefully
-	}
 
-	//assert(streq(reg_str, "0")); // server returns '0' on successful registration
+	// clean up
 	zstr_free(&reg_str);
-	zmsg_destroy(&reg_msg);
-	zsock_destroy(&dealer_sock);
+	zmsg_destroy(&returnMsg);
+	return retVal;
 }
